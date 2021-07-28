@@ -485,14 +485,22 @@ int main(int argc, char** argv) {
     for (int f = 0; f < (int)file_names.size(); f++) {
         fcount++;
         if (fcount < BATCH_SIZE && f + 1 != (int)file_names.size()) continue;
-        for (int b = 0; b < fcount; b++) {
+		
+        // Run inference
+        auto start = std::chrono::system_clock::now();		
+		
+        for (int b = 0; b < fcount; b++) 
+		{
             cv::Mat img = cv::imread(std::string(argv[2]) + "/" + file_names[f - fcount + 1 + b]);
-            if (img.empty()) continue;
+            if (img.empty()) 
+				continue;
             cv::Mat pr_img = preprocess_img(img); // letterbox BGR to RGB
             int i = 0;
-            for (int row = 0; row < INPUT_H; ++row) {
+            for (int row = 0; row < INPUT_H; ++row) 
+			{
                 uchar* uc_pixel = pr_img.data + row * pr_img.step;
-                for (int col = 0; col < INPUT_W; ++col) {
+                for (int col = 0; col < INPUT_W; ++col) 
+				{
                     data[b * 3 * INPUT_H * INPUT_W + i] = (float)uc_pixel[2] / 255.0;
                     data[b * 3 * INPUT_H * INPUT_W + i + INPUT_H * INPUT_W] = (float)uc_pixel[1] / 255.0;
                     data[b * 3 * INPUT_H * INPUT_W + i + 2 * INPUT_H * INPUT_W] = (float)uc_pixel[0] / 255.0;
@@ -502,16 +510,18 @@ int main(int argc, char** argv) {
             }
         }
 
-        // Run inference
-        auto start = std::chrono::system_clock::now();
+
         doInference(*context, stream, buffers, data, prob, BATCH_SIZE);
-        auto end = std::chrono::system_clock::now();
-        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+
         std::vector<std::vector<Yolo::Detection>> batch_res(fcount);
         for (int b = 0; b < fcount; b++) {
             auto& res = batch_res[b];
             nms(res, &prob[b * OUTPUT_SIZE], CONF_THRESH, NMS_THRESH);
         }
+		
+        auto end = std::chrono::system_clock::now();
+        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+		
         for (int b = 0; b < fcount; b++) {
             auto& res = batch_res[b];
             //std::cout << res.size() << std::endl;

@@ -577,6 +577,10 @@ int main(int argc, char **argv)
         fcount++;
         if (fcount < BATCH_SIZE && f + 1 != (int)file_names.size())
             continue;
+		
+        // Run inference
+        auto start = std::chrono::system_clock::now();		
+
         for (int b = 0; b < fcount; b++)
         {
             cv::Mat img = cv::imread(std::string(argv[2]) + "/" + file_names[f - fcount + 1 + b]);
@@ -598,11 +602,12 @@ int main(int argc, char **argv)
             }
         }
 
-        // Run inference
-        auto start = std::chrono::system_clock::now();
+
         doInference(*context, engine, data, counts, boxes, scores, classes, fcount);
+		
         auto end = std::chrono::system_clock::now();
         std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+		
         for (int b = 0; b < fcount; b++)
         {
             std::cout << "detect count " << counts[b] << std::endl;
