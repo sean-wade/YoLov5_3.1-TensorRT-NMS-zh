@@ -5,14 +5,14 @@ int main(int argc, char **argv)
 {
 
     YoloV5Detector YoloInstance;
-    YoloInstance.InitModel("v5s.engine");
+    YoloInstance.InitModel("../v5s.engine");
 
     auto t_start_pre = std::chrono::high_resolution_clock::now();
     auto t_end_pre = std::chrono::high_resolution_clock::now();
     float total_pre = std::chrono::duration<float, std::milli>(t_end_pre - t_start_pre).count();
     
     for(int i = 0; i < 100; i++){
-        cv::Mat big_img = cv::imread("test.jpg", -1);
+        cv::Mat big_img = cv::imread("../test.jpg", -1);
 
         std::vector<RecBox> res;
 
