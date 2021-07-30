@@ -20,8 +20,6 @@
 #define V5_INPUT_W 608
 
 
-
-
 // #include "common.h"
 #include "NvInfer.h"
 #include "NvInferPlugin.h"
