@@ -1,4 +1,10 @@
 #include "v5.h"
+#include "logging.h"
+#include "yololayer.h"
+
+#include <chrono>
+#include <fstream> 
+#include <iostream>
 
 static Logger gLogger;
 cv::Mat preprocess_img(cv::Mat &img)
@@ -88,20 +94,22 @@ bool YoloV5Detector::InitModel(std::string engine_name, int gpu_id)
         file.close();
     }
     else
-    {
         return false;
-    }
 
     // IRuntime *runtime = createInferRuntime(gLogger);
     m_runtime_ = createInferRuntime(gLogger);
-    assert(m_runtime_ != nullptr);
+    if(m_runtime_ == nullptr)
+        return false;
+    
     // ICudaEngine *engine = runtime->deserializeCudaEngine(trtModelStream, size);
     m_engine_ = m_runtime_->deserializeCudaEngine(trtModelStream, size);
-    assert(m_engine_ != nullptr);
+    if(m_engine_ == nullptr)
+        return false;
     
     // IExecutionContext *context = m_engine_->createExecutionContext();
     m_context_ = m_engine_->createExecutionContext();
-    assert(m_context_ != nullptr);
+    if(m_context_ == nullptr)
+        return false;
 
     delete[] trtModelStream;
     return true;
@@ -136,21 +144,21 @@ int YoloV5Detector::Process(cv::Mat &img, std::vector<RecBox> &result)
         }
     }
 
-    auto start = std::chrono::system_clock::now();
+    // auto start = std::chrono::system_clock::now();
 
     // Run inference
     // doInference();
     doInference(data, counts, boxes, scores, classes, 1);
 
-    auto end = std::chrono::system_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+    // auto end = std::chrono::system_clock::now();
+    // std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
 
-    std::cout << *counts << std::endl;
-    std::cout << *boxes << std::endl;
-    std::cout << *scores << std::endl;
-    std::cout << *classes << std::endl;
+    // std::cout << *counts << std::endl;
+    // std::cout << *boxes << std::endl;
+    // std::cout << *scores << std::endl;
+    // std::cout << *classes << std::endl;
 
-    std::cout << "detect count " << counts[0] << std::endl;
+    // std::cout << "detect count " << counts[0] << std::endl;
     for (int j = 0; j < counts[0]; j++)
     {
         float *curBbox = boxes + j * 4;
@@ -164,7 +172,7 @@ int YoloV5Detector::Process(cv::Mat &img, std::vector<RecBox> &result)
         result.push_back(rec_box); 
     }
 
-    return 0;
+    return counts[0];    //目标个数
 }
 
 

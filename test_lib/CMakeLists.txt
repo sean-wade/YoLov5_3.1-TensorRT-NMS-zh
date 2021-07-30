@@ -40,4 +40,5 @@ target_link_libraries(tttt
     ${OpenCV_LIBS}
     ${Boost_LIBRARIES}
     ${PROJECT_SOURCE_DIR}/libyolov5_trt.so
+    #${PROJECT_SOURCE_DIR}/libyoloplugin.so
     )

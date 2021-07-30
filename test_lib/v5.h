@@ -6,14 +6,12 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 
-#include <fstream> 
-#include <iostream>
-#include <chrono>
+#include "NvInfer.h"
+#include "NvInferPlugin.h"
 #include "cuda_runtime_api.h"
 
 // #define NMS_THRESH 0.4
 // #define CONF_THRESH 0.5
-
 #define BATCH_SIZE 1
 #define KEEP_TOPK 20
 #define V5_INPUT_H 608
@@ -21,12 +19,6 @@
 
 
 
-
-// #include "common.h"
-#include "NvInfer.h"
-#include "NvInferPlugin.h"
-#include "yololayer.h"
-#include "logging.h"
 #define CHECK(status)                                          \
     do                                                         \
     {                                                          \

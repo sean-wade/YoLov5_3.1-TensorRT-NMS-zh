@@ -5,7 +5,7 @@ int main(int argc, char **argv)
 {
 
     YoloV5Detector YoloInstance;
-    YoloInstance.InitModel("../v5s.engine");
+    YoloInstance.InitModel("../coco80.engine");
 
     auto t_start_pre = std::chrono::high_resolution_clock::now();
     auto t_end_pre = std::chrono::high_resolution_clock::now();
