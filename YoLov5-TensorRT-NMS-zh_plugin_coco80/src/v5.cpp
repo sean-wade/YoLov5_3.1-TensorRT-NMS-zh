@@ -123,11 +123,11 @@ int YoloV5Detector::Process(cv::Mat &img, std::vector<RecBox> &result)
         return -1;
 
     // prepare input data ---------------------------
-    static float data[BATCH_SIZE * 3 * V5_INPUT_H * V5_INPUT_W];
-    static int counts[BATCH_SIZE];
-    static float boxes[BATCH_SIZE * KEEP_TOPK * 4];
-    static float scores[BATCH_SIZE * KEEP_TOPK];
-    static float classes[BATCH_SIZE * KEEP_TOPK];
+    float data[BATCH_SIZE * 3 * V5_INPUT_H * V5_INPUT_W];
+    int counts[BATCH_SIZE];
+    float boxes[BATCH_SIZE * KEEP_TOPK * 4];
+    float scores[BATCH_SIZE * KEEP_TOPK];
+    float classes[BATCH_SIZE * KEEP_TOPK];
 
     cv::Mat pr_img = preprocess_img(img); // letterbox BGR to RGB
     int i = 0;
