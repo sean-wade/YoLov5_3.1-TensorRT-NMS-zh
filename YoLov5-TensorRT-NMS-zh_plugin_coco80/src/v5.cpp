@@ -122,12 +122,21 @@ int YoloV5Detector::Process(cv::Mat &img, std::vector<RecBox> &result)
     if (img.empty())
         return -1;
 
+/*    // prepare input data ---------------------------
+    static float data[BATCH_SIZE * 3 * V5_INPUT_H * V5_INPUT_W];
+    static int counts[BATCH_SIZE];
+    static float boxes[BATCH_SIZE * KEEP_TOPK * 4];
+    static float scores[BATCH_SIZE * KEEP_TOPK];
+    static float classes[BATCH_SIZE * KEEP_TOPK];
+*/
+
     // prepare input data ---------------------------
     float data[BATCH_SIZE * 3 * V5_INPUT_H * V5_INPUT_W];
     int counts[BATCH_SIZE];
     float boxes[BATCH_SIZE * KEEP_TOPK * 4];
     float scores[BATCH_SIZE * KEEP_TOPK];
     float classes[BATCH_SIZE * KEEP_TOPK];
+
 
     cv::Mat pr_img = preprocess_img(img); // letterbox BGR to RGB
     int i = 0;
@@ -153,7 +162,7 @@ int YoloV5Detector::Process(cv::Mat &img, std::vector<RecBox> &result)
     // auto end = std::chrono::system_clock::now();
     // std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
 
-    // std::cout << *counts << std::endl;
+    // std::cout << "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTensorRT *counts: " << *counts << std::endl;
     // std::cout << *boxes << std::endl;
     // std::cout << *scores << std::endl;
     // std::cout << *classes << std::endl;
